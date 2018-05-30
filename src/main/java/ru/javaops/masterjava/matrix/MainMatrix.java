@@ -4,12 +4,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static ru.javaops.masterjava.matrix.Strassen.multiStrassen;
+
 /**
  * gkislin
  * 03.07.2016
  */
 public class MainMatrix {
-    private static final int MATRIX_SIZE = 2000;
+    private static final int MATRIX_SIZE = 1024;
     private static final int THREAD_NUMBER = 10;
 
     private final static ExecutorService executor = Executors.newFixedThreadPool(MainMatrix.THREAD_NUMBER);
@@ -35,7 +37,13 @@ public class MainMatrix {
             out("Concurrent thread time, sec: %.3f", duration);
             concurrentThreadSum += duration;
 
-            if (!MatrixUtil.compare(matrixC, concurrentMatrixC)) {
+            start = System.currentTimeMillis();
+            final int[][] strassenMatrixC = multiStrassen(matrixA, matrixB, MATRIX_SIZE);
+            duration = (System.currentTimeMillis() - start) / 1000.;
+            out("Concurrent thread time, sec: %.3f", duration);
+            concurrentThreadSum += duration;
+
+            if (!MatrixUtil.compare(matrixC, strassenMatrixC)) {
                 System.err.println("Comparison failed");
                 break;
             }
