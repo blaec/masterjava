@@ -1,5 +1,7 @@
 package ru.javaops.masterjava.matrix;
 
+import java.util.concurrent.RecursiveTask;
+
 import static ru.javaops.masterjava.matrix.MatrixUtil.singleThreadMultiply;
 
 public class Strassen {
@@ -91,4 +93,72 @@ public class Strassen {
         }
         return a;
     }
+
+    public static class myRecursiveTask extends RecursiveTask<int[][]> {
+        private static final long serialVersionUID = -433764214304695286L;
+        int n;
+        int[][] a;
+        int[][] b;
+
+        public myRecursiveTask(int[][] a, int[][] b, int n) {
+            this.a = a;
+            this.b = b;
+            this.n = n;
+        }
+
+        @Override
+        protected int[][] compute() {
+            if (n <= 64) {
+                return singleThreadMultiply(a, b);
+            }
+
+            n = n >> 1;
+
+            int[][] a11 = new int[n][n];
+            int[][] a12 = new int[n][n];
+            int[][] a21 = new int[n][n];
+            int[][] a22 = new int[n][n];
+
+            int[][] b11 = new int[n][n];
+            int[][] b12 = new int[n][n];
+            int[][] b21 = new int[n][n];
+            int[][] b22 = new int[n][n];
+
+            splitMatrix(a, a11, a12, a21, a22);
+            splitMatrix(b, b11, b12, b21, b22);
+
+            myRecursiveTask task_p1 = new myRecursiveTask(summation(a11,a22),summation(b11,b22),n);
+            myRecursiveTask task_p2 = new myRecursiveTask(summation(a21,a22),b11,n);
+            myRecursiveTask task_p3 = new myRecursiveTask(a11,subtraction(b12,b22),n);
+            myRecursiveTask task_p4 = new myRecursiveTask(a22,subtraction(b21,b11),n);
+            myRecursiveTask task_p5 = new myRecursiveTask(summation(a11,a12),b22,n);
+            myRecursiveTask task_p6 = new myRecursiveTask(subtraction(a21,a11),summation(b11,b12),n);
+            myRecursiveTask task_p7 = new myRecursiveTask(subtraction(a12,a22),summation(b21,b22),n);
+
+            task_p1.fork();
+            task_p2.fork();
+            task_p3.fork();
+            task_p4.fork();
+            task_p5.fork();
+            task_p6.fork();
+            task_p7.fork();
+
+            int[][] p1 = task_p1.join();
+            int[][] p2 = task_p2.join();
+            int[][] p3 = task_p3.join();
+            int[][] p4 = task_p4.join();
+            int[][] p5 = task_p5.join();
+            int[][] p6 = task_p6.join();
+            int[][] p7 = task_p7.join();
+
+            int[][] c11 = summation(summation(p1, p4), subtraction(p7, p5));
+            int[][] c12 = summation(p3, p5);
+            int[][] c21 = summation(p2, p4);
+            int[][] c22 = summation(subtraction(p1, p2), summation(p3, p6));
+
+            return collectMatrix(c11, c12, c21, c22);
+        }
+    }
+
 }
+
