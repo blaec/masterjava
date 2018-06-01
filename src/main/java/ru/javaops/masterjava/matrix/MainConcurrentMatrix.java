@@ -4,47 +4,31 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static ru.javaops.masterjava.matrix.Strassen.multiStrassen;
-
 /**
  * gkislin
  * 03.07.2016
  */
-public class MainMatrix {
-    private static final int MATRIX_SIZE = 1024;
-    private static final int THREAD_NUMBER = 10;
-    private static final int PASS = 15;
+public class MainConcurrentMatrix {
+    private static final int MATRIX_SIZE = 2048;
+    private static final int PASS = 5;
 
-    private final static ExecutorService executor = Executors.newFixedThreadPool(MainMatrix.THREAD_NUMBER);
+    private final static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         final int[][] matrixA = MatrixUtil.create(MATRIX_SIZE);
         final int[][] matrixB = MatrixUtil.create(MATRIX_SIZE);
 
-        double singleThreadSum = 0.;
-        double singleStrassenThreadSum = 0.;
+
         double concurrentThreadSum = 0.;
         double concurrentStrassenThreadSum = 0.;
         int count = 1;
         while (count <= PASS) {
             System.out.println("Pass " + count);
             long start = System.currentTimeMillis();
-            final int[][] matrixC = MatrixUtil.singleThreadMultiply(matrixA, matrixB);
-            double duration = (System.currentTimeMillis() - start) / 1000.;
-            out("Single thread time, sec: %.3f", duration);
-            singleThreadSum += duration;
-
-            start = System.currentTimeMillis();
             final int[][] concurrentMatrixC = MatrixUtil.concurrentMultiply(matrixA, matrixB, executor);
-            duration = (System.currentTimeMillis() - start) / 1000.;
+            double duration = (System.currentTimeMillis() - start) / 1000.;
             out("Concurrent thread time, sec: %.3f", duration);
             concurrentThreadSum += duration;
-
-            start = System.currentTimeMillis();
-            final int[][] strassenMatrixC = multiStrassen(matrixA, matrixB, MATRIX_SIZE);
-            duration = (System.currentTimeMillis() - start) / 1000.;
-            out("Single Strassen thread time, sec: %.3f", duration);
-            singleStrassenThreadSum += duration;
 
             start = System.currentTimeMillis();
             int[][] concurrentStrassenMatrixC = new Strassen.MyRecursiveTask(matrixA, matrixB, MATRIX_SIZE).compute();
@@ -52,9 +36,7 @@ public class MainMatrix {
             out("Concurrent Strassen thread time, sec: %.3f", duration);
             concurrentStrassenThreadSum += duration;
 
-            if (!MatrixUtil.compare(matrixC, strassenMatrixC) ||
-                    !MatrixUtil.compare(matrixC, concurrentStrassenMatrixC) ||
-                    !MatrixUtil.compare(matrixC, concurrentMatrixC)) {
+            if (!MatrixUtil.compare(concurrentStrassenMatrixC, concurrentMatrixC)) {
                 System.err.println("Comparison failed");
                 executor.shutdown();
                 break;
@@ -62,9 +44,7 @@ public class MainMatrix {
             count++;
         }
         executor.shutdownNow();
-        out("\nAverage single thread time, sec: %.3f", singleThreadSum / PASS);
-        out("Average concurrent thread time, sec: %.3f", concurrentThreadSum / PASS);
-        out("Average single Strassen thread time, sec: %.3f", singleStrassenThreadSum / PASS);
+        out("\nAverage concurrent thread time, sec: %.3f", concurrentThreadSum / PASS);
         out("Average concurrent Strassen thread time, sec: %.3f", concurrentStrassenThreadSum / PASS);
     }
 

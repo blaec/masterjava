@@ -3,9 +3,7 @@ package ru.javaops.masterjava.matrix;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * gkislin
@@ -13,21 +11,25 @@ import java.util.concurrent.Future;
  */
 public class MatrixUtil {
 
-    // TODO implement parallel multiplication matrixA*matrixB
+    // implement parallel multiplication matrixA*matrixB
     public static int[][] concurrentMultiply(int[][] matrixA, int[][] matrixB, ExecutorService executor) throws InterruptedException, ExecutionException {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
-        List<Future> tasks = new ArrayList<>();
+        final List<Future> futures = new ArrayList<>();
 
         for (int i = 0; i < matrixSize; i++) {
             final int pos = i;
-            tasks.add(executor.submit(() -> calcElement(pos, matrixA, matrixB, matrixC)));
+            futures.add(executor.submit(() -> matrixElement(pos, matrixA, matrixB, matrixC)));
+        }
+
+        for (Future future : futures) {
+            future.get();
         }
 
         return matrixC;
     }
 
-    private static void calcElement(int pos, int[][] matrixA, int[][] matrixB, int[][] matrixC) {
+    private static void matrixElement(int pos, int[][] matrixA, int[][] matrixB, int[][] matrixC) {
         final int matrixSize = matrixA.length;
         int[] columnB = new int[matrixSize];
 
@@ -35,6 +37,10 @@ public class MatrixUtil {
             columnB[k] = matrixB[k][pos];
         }
 
+        calcElement(pos, matrixA, matrixC, matrixSize, columnB);
+    }
+
+    private static void calcElement(int pos, int[][] matrixA, int[][] matrixC, int matrixSize, int[] columnB) {
         for (int j = 0; j < matrixSize; j++) {
             int[] columnA = matrixA[j];
             int sum = 0;
@@ -59,14 +65,7 @@ public class MatrixUtil {
                     columnB[k] = matrixB[k][i];
                 }
 
-                for (int j = 0; j < matrixSize; j++) {
-                    int[] columnA = matrixA[j];
-                    int sum = 0;
-                    for (int k = 0; k < matrixSize; k++) {
-                        sum += columnA[k] * columnB[k];
-                    }
-                    matrixC[j][i] = sum;
-                }
+                calcElement(i, matrixA, matrixC, matrixSize, columnB);
                 i++;
             }
         } catch (IndexOutOfBoundsException ignored) {

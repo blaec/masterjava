@@ -11,9 +11,9 @@ public class Strassen {
      * otherwise use Strassen algorithm
      * https://habr.com/post/313258/#comment_9874222
      *
-     * @param   a     matrix a
-     * @param   b     matrix b
-     * @param   n     size of matrix
+     * @param a matrix a
+     * @param b matrix b
+     * @param n size of matrix
      */
     public static int[][] multiStrassen(int[][] a, int[][] b, int n) {
         if (n <= 64) {
@@ -94,13 +94,13 @@ public class Strassen {
         return a;
     }
 
-    public static class myRecursiveTask extends RecursiveTask<int[][]> {
+    public static class MyRecursiveTask extends RecursiveTask<int[][]> {
         private static final long serialVersionUID = -433764214304695286L;
         int n;
         int[][] a;
         int[][] b;
 
-        public myRecursiveTask(int[][] a, int[][] b, int n) {
+        public MyRecursiveTask(int[][] a, int[][] b, int n) {
             this.a = a;
             this.b = b;
             this.n = n;
@@ -127,13 +127,13 @@ public class Strassen {
             splitMatrix(a, a11, a12, a21, a22);
             splitMatrix(b, b11, b12, b21, b22);
 
-            myRecursiveTask task_p1 = new myRecursiveTask(summation(a11,a22),summation(b11,b22),n);
-            myRecursiveTask task_p2 = new myRecursiveTask(summation(a21,a22),b11,n);
-            myRecursiveTask task_p3 = new myRecursiveTask(a11,subtraction(b12,b22),n);
-            myRecursiveTask task_p4 = new myRecursiveTask(a22,subtraction(b21,b11),n);
-            myRecursiveTask task_p5 = new myRecursiveTask(summation(a11,a12),b22,n);
-            myRecursiveTask task_p6 = new myRecursiveTask(subtraction(a21,a11),summation(b11,b12),n);
-            myRecursiveTask task_p7 = new myRecursiveTask(subtraction(a12,a22),summation(b21,b22),n);
+            MyRecursiveTask task_p1 = new MyRecursiveTask(summation(a11, a22), summation(b11, b22), n);
+            MyRecursiveTask task_p2 = new MyRecursiveTask(summation(a21, a22), b11, n);
+            MyRecursiveTask task_p3 = new MyRecursiveTask(a11, subtraction(b12, b22), n);
+            MyRecursiveTask task_p4 = new MyRecursiveTask(a22, subtraction(b21, b11), n);
+            MyRecursiveTask task_p5 = new MyRecursiveTask(summation(a11, a12), b22, n);
+            MyRecursiveTask task_p6 = new MyRecursiveTask(subtraction(a21, a11), summation(b11, b12), n);
+            MyRecursiveTask task_p7 = new MyRecursiveTask(subtraction(a12, a22), summation(b21, b22), n);
 
             task_p1.fork();
             task_p2.fork();
