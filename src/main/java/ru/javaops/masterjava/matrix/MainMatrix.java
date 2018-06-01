@@ -51,8 +51,11 @@ public class MainMatrix {
             out("Concurrent Strassen thread time, sec: %.3f", duration);
             concurrentStrassenThreadSum += duration;
 
-            if (!MatrixUtil.compare(matrixC, strassenMatrixC) || !MatrixUtil.compare(matrixC, concurrentStrassenMatrixC)) {
+            if (!MatrixUtil.compare(matrixC, strassenMatrixC) ||
+                    !MatrixUtil.compare(matrixC, concurrentStrassenMatrixC) ||
+                    !MatrixUtil.compare(matrixC, concurrentMatrixC)) {
                 System.err.println("Comparison failed");
+                executor.shutdown();
                 break;
             }
             count++;
