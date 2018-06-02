@@ -25,7 +25,7 @@ public class MainMatrix {
             System.out.println("Pass " + count);
             long start = System.currentTimeMillis();
             final int[][] matrixC = MatrixUtil.singleThreadMultiplyOpt(matrixA, matrixB);
-            double duration = (System.currentTimeMillis() - start) / 1000.;
+            double duration =  (System.currentTimeMillis() - start) / 1000.;
             out("Single thread time, sec: %.3f", duration);
             singleThreadSum += duration;
 
