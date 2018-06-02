@@ -16,13 +16,19 @@ public class MatrixUtil {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
         final List<Future> futures = new ArrayList<>();
+        final CompletionService completionService = new ExecutorCompletionService(executor);
 
         for (int i = 0; i < matrixSize; i++) {
             final int pos = i;
-            futures.add(executor.submit(() -> matrixElement(pos, matrixA, matrixB, matrixC)));
+            futures.add(completionService.submit(() -> matrixElement(pos, matrixA, matrixB, matrixC), null));
         }
 
-        for (Future future : futures) {
+        while (!futures.isEmpty()) {
+            Future future = completionService.poll(10, TimeUnit.SECONDS);
+            if (future == null) {
+                throw new InterruptedException();
+            }
+            futures.remove(future);
             future.get();
         }
 
