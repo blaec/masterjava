@@ -7,21 +7,19 @@
     <xs:element name="Payload">
         <xs:complexType>
             <xs:all>
-                <xs:element name="Cities">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="1" maxOccurs="unbounded">
-                            <xs:element ref="City"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Users">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element ref="User"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element ref="Cities"/>
+                <xs:element ref="Projects"/>
+                <xs:element ref="Users"/>
             </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- User complex element -->
+    <xs:element name="Users">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="User"/>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
 
@@ -44,6 +42,15 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <!-- City complex element -->
+    <xs:element name="Cities">
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element ref="City"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="City" type="cityType"/>
 
     <xs:complexType name="cityType">
@@ -53,4 +60,22 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <!-- Project complex element -->
+    <xs:element name="Projects">
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element ref="Project"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Project">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="name"/>
+                <xs:element type="xs:string" name="description"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
