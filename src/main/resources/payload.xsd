@@ -75,7 +75,35 @@
             <xs:sequence>
                 <xs:element type="xs:string" name="name"/>
                 <xs:element type="xs:string" name="description"/>
+                <xs:element ref="Groups"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <!-- Group complex element -->
+    <xs:element name="Groups">
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element ref="Group"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Group">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute type="groupType" name="type" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="groupType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FINISHED"/>
+            <xs:enumeration value="CURRENT"/>
+            <xs:enumeration value="REGISTERING"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

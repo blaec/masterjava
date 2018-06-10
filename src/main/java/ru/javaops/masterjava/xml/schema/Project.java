@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element ref="{http://javaops.ru}Groups"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,7 +32,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "name",
-    "description"
+    "description",
+    "groups"
 })
 @XmlRootElement(name = "Project", namespace = "http://javaops.ru")
 public class Project {
@@ -40,6 +42,8 @@ public class Project {
     protected String name;
     @XmlElement(namespace = "http://javaops.ru", required = true)
     protected String description;
+    @XmlElement(name = "Groups", namespace = "http://javaops.ru", required = true)
+    protected Groups groups;
 
     /**
      * Gets the value of the name property.
@@ -87,6 +91,30 @@ public class Project {
      */
     public void setDescription(String value) {
         this.description = value;
+    }
+
+    /**
+     * Gets the value of the groups property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Groups }
+     *     
+     */
+    public Groups getGroups() {
+        return groups;
+    }
+
+    /**
+     * Sets the value of the groups property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Groups }
+     *     
+     */
+    public void setGroups(Groups value) {
+        this.groups = value;
     }
 
 }

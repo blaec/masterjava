@@ -42,6 +42,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Groups }
+     * 
+     */
+    public Groups createGroups() {
+        return new Groups();
+    }
+
+    /**
+     * Create an instance of {@link Group }
+     * 
+     */
+    public Group createGroup() {
+        return new Group();
+    }
+
+    /**
      * Create an instance of {@link User }
      * 
      */

@@ -24,10 +24,20 @@
         <Project>
             <name>topjava</name>
             <description>topjava project description</description>
+            <Groups>
+                <Group type="FINISHED">topjava01</Group>
+                <Group type="FINISHED">topjava02</Group>
+                <Group type="CURRENT">topjava03</Group>
+                <Group type="REGISTERING">topjava04</Group>
+            </Groups>
         </Project>
         <Project>
             <name>masterjava</name>
             <description>masterjava project description</description>
+            <Groups>
+                <Group type="CURRENT">masterjava01</Group>
+                <Group type="REGISTERING">masterjava02</Group>
+            </Groups>
         </Project>
     </Projects>
 </Payload>
