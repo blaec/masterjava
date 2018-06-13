@@ -27,6 +27,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element type="xs:string" name="fullName"/>
+                <xs:element type="xs:IDREFS" name="UserGroups"/>
             </xs:sequence>
             <xs:attribute type="xs:string" name="email" use="required"/>
             <xs:attribute type="flagType" name="flag" use="required"/>
@@ -94,6 +95,7 @@
             <xs:simpleContent>
                 <xs:extension base="xs:string">
                     <xs:attribute type="groupType" name="type" use="required"/>
+                    <xs:attribute type="xs:ID" name="groupId" use="required"/>
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
