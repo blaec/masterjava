@@ -4,26 +4,42 @@
     <Users>
         <User flag="active" city="kiv" email="gmail@gmail.com">
             <fullName>Full Name</fullName>
-            <UserGroups>
-                tj-01 tj-02 mj-01
-            </UserGroups>
+            <UserGroups>tj-01 tj-02 mj-01</UserGroups>
         </User>
         <User flag="superuser" city="spb" email="admin@javaops.ru">
             <fullName>Admin</fullName>
-            <UserGroups>
-                tj-02
-            </UserGroups>
+            <UserGroups>tj-02</UserGroups>
         </User>
         <User flag="deleted" city="spb" email="mail@yandex.ru">
             <fullName>Deleted</fullName>
-            <UserGroups>
-                tj-04 mj-02
-            </UserGroups>
+            <UserGroups>tj-04 mj-02</UserGroups>
+        </User>
+        <User flag="active" city="lvv" email="gamer@gmail.com">
+            <fullName>Gamer</fullName>
+            <UserGroups>tj-03 tj-04 mj-02</UserGroups>
+        </User>
+        <User flag="active" city="ods" email="lamer@gmail.com">
+            <fullName>Lamer C. John</fullName>
+            <UserGroups>tj-01 tj-02 mj-01 mj-02</UserGroups>
+        </User>
+        <User flag="deleted" city="kiv" email="hacker">
+            <fullName>Hack O'Riardon</fullName>
+            <UserGroups>mj-01 mj-02</UserGroups>
+        </User>
+        <User flag="active" city="mnsk" email="pres@gmail.com">
+            <fullName>Kumar</fullName>
+            <UserGroups>tj-04</UserGroups>
+        </User>
+        <User flag="active" city="spb" email="peter@gmail.com">
+            <fullName>Peter First</fullName>
+            <UserGroups>mj-01</UserGroups>
         </User>
     </Users>
     <Cities>
         <City id="spb">Санкт-Петербург</City>
         <City id="kiv">Киев</City>
+        <City id="lvv">Львов</City>
+        <City id="ods">Одесса</City>
         <City id="mnsk">Минск</City>
     </Cities>
     <Projects>
