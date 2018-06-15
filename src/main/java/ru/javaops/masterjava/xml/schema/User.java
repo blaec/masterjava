@@ -51,7 +51,7 @@ public class User {
     @XmlElement(name = "UserGroups", namespace = "http://javaops.ru", required = true)
     @XmlIDREF
     @XmlSchemaType(name = "IDREFS")
-    protected List<Object> userGroups;
+    protected List<Group> userGroups;
     @XmlAttribute(name = "email", required = true)
     protected String email;
     @XmlAttribute(name = "flag", required = true)
@@ -107,9 +107,9 @@ public class User {
      * 
      * 
      */
-    public List<Object> getUserGroups() {
+    public List<Group> getUserGroups() {
         if (userGroups == null) {
-            userGroups = new ArrayList<Object>();
+            userGroups = new ArrayList<Group>();
         }
         return this.userGroups;
     }
