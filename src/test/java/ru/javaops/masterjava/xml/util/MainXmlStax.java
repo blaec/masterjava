@@ -1,11 +1,13 @@
 package ru.javaops.masterjava.xml.util;
 
 import com.google.common.io.Resources;
+import org.junit.Assert;
 
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainXmlStax {
     private String project;
@@ -14,11 +16,16 @@ public class MainXmlStax {
         this.project = project;
     }
 
+    public String getProject() {
+        return project;
+    }
+
     public String printUserDetails() throws Exception {
         String userName = null;
         String email = null;
         List<String> userDetails = new ArrayList<>();
-        String compareString = "masterjava".equals(project) ? "mj" : "tj";
+        String compareString = getGroupCode();
+        Objects.requireNonNull(compareString, "GroupCode must not be null");
 
         try (StaxStreamProcessor processor =
                      new StaxStreamProcessor(Resources.getResource("payload.xml").openStream())) {
@@ -40,7 +47,23 @@ public class MainXmlStax {
                 }
             }
         }
+
         return userDetails.toString();
+    }
+
+    private String getGroupCode() {
+        String groupCode = null;
+
+        switch (getProject()) {
+            case "masterjava":
+                groupCode = "mj";
+                break;
+            case "topjava":
+                groupCode = "tj";
+                break;
+        }
+
+        return groupCode;
     }
 
     public static void main(String[] args) {
