@@ -1,0 +1,25 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thymeleaf Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+    <p th:text="#{welcome.msg}">Welcome Offline</p>
+    <p th:text="#{project.msg} + ${project}">Project Offline</p>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>full name</th>
+            <th>email</th>
+            <th>flag</th>
+        </tr>
+        <th:block th:each="user : ${users}">
+            <tr>
+                <td th:text="${user.getValue()}">...</td>
+                <td th:text="${user.getEmail()}">...</td>
+                <td colspan="2" th:text="${user.getFlag()}">...</td>
+            </tr>
+        </th:block>
+    </table>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package ru.javaops.masterjava;
 
-import com.google.common.base.Splitter;
 import com.google.common.io.Resources;
 import j2html.tags.ContainerTag;
 import one.util.streamex.StreamEx;
@@ -10,24 +9,26 @@ import ru.javaops.masterjava.xml.schema.Project;
 import ru.javaops.masterjava.xml.schema.User;
 import ru.javaops.masterjava.xml.util.JaxbParser;
 import ru.javaops.masterjava.xml.util.Schemas;
-import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 import ru.javaops.masterjava.xml.util.XsltProcessor;
 
-import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Strings.nullToEmpty;
 import static j2html.TagCreator.*;
+import static ru.javaops.masterjava.concretepage.WelcomeApplication.USER_COMPARATOR;
+import static ru.javaops.masterjava.concretepage.WelcomeApplication.processByStax;
 
 public class MainXml {
 
-    private static final Comparator<User> USER_COMPARATOR = Comparator.comparing(User::getValue).thenComparing(User::getEmail);
+//    private static final Comparator<User> USER_COMPARATOR = Comparator.comparing(User::getValue).thenComparing(User::getEmail);
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
@@ -79,6 +80,7 @@ public class MainXml {
                 );
     }
 
+/*
     private static Set<User> processByStax(String projectName, URL payloadUrl) throws Exception {
 
         try (InputStream is = payloadUrl.openStream()) {
@@ -86,7 +88,6 @@ public class MainXml {
             final Set<String> groupNames = new HashSet<>();
 
             // Projects loop
-            projects:
             while (processor.startElement("Project", "Projects")) {
                 if (projectName.equals(processor.getAttribute("name"))) {
                     while (processor.startElement("Group", "Project")) {
@@ -113,6 +114,7 @@ public class MainXml {
             return users;
         }
     }
+*/
 
     private static String toHtml(Set<User> users, String projectName) {
         final ContainerTag table = table().with(
