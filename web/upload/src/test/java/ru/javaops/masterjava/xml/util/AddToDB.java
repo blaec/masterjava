@@ -20,7 +20,6 @@ public class AddToDB {
         UserProcessor userProcessor = new UserProcessor();
         InputStream is = payloadUrl.openStream();
         List<User> users = userProcessor.process(is);
-        users.forEach(System.out::println);
 
         DBIProvider.init(() -> {
             try {
@@ -32,6 +31,7 @@ public class AddToDB {
         });
         UserDao dao = DBIProvider.getDao(UserDao.class);
         dao.clean();
-        DBIProvider.getDBI().useTransaction((conn, status) -> users.forEach(dao::insert));
+        int batchSize = 3;
+        DBIProvider.getDBI().useTransaction((conn, status) -> dao.insertBatch(users.iterator(), batchSize));
     }
 }
