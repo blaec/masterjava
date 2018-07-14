@@ -26,9 +26,15 @@ public abstract class UserDao implements AbstractDao {
         return user;
     }
 
-    public void batchInsert(Iterator<User> users, int size) {
-        int[] ids = insertBatchGeneratedId(users, size);
+    public void batchInsert(List<User> users, int size) {
+/*
+        int id = getNextVal();
+        System.out.println(setNewSequence(id + size));;
+        users.forEach(user -> user.setId(id+1));
+*/
+        int[] ids = insertBatchGeneratedId(users.iterator(), size);
         System.out.printf("%d entries inserted into masterjava-db%n", IntStream.of(ids).sum());
+//        System.out.println(getCurrVal());
     }
 
     @SqlUpdate("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
@@ -40,6 +46,17 @@ public abstract class UserDao implements AbstractDao {
             "CAST(:flag AS user_flag)) " +
             "ON CONFLICT ON CONSTRAINT email_idx DO NOTHING ")
     abstract int[] insertBatchGeneratedId(@BindBean Iterator<User> user, @BatchChunkSize int size);
+/*
+
+    @SqlQuery("SELECT currval('user_seq')")
+    abstract int getCurrVal();
+
+    @SqlQuery("SELECT nextval('user_seq')")
+    abstract int getNextVal();
+
+    @SqlQuery("ALTER SEQUENCE user_seq RESTART WITH :newId")
+    abstract int setNewSequence(@Bind("newId") int restartWith);
+*/
 
     @SqlUpdate("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS user_flag)) ")
     abstract void insertWithId(@BindBean User user);
