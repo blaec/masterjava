@@ -24,16 +24,15 @@ public abstract class UserDao implements AbstractDao {
         return user;
     }
 
-    public void insertBatch(Iterator<User> users, int size) {
-        insertBatchGeneratedId(users, size);
-    }
-
     @SqlUpdate("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
     @GetGeneratedKeys
     abstract int insertGeneratedId(@BindBean User user);
 
-    @SqlBatch("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
-    abstract void insertBatchGeneratedId(@BindBean Iterator<User> user, @BatchChunkSize int size);
+    @SqlBatch("INSERT INTO users (full_name, email, flag) " +
+              "VALUES (:fullName, :email, " +
+              "CAST(:flag AS user_flag)) " +
+              "ON CONFLICT ON CONSTRAINT email_idx DO NOTHING ")
+    public abstract void insertBatchGeneratedId(@BindBean Iterator<User> user, @BatchChunkSize int size);
 
     @SqlUpdate("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS user_flag)) ")
     abstract void insertWithId(@BindBean User user);

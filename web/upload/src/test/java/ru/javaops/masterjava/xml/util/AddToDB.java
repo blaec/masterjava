@@ -32,6 +32,6 @@ public class AddToDB {
         UserDao dao = DBIProvider.getDao(UserDao.class);
 //        dao.clean();
         int batchSize = 3;
-        DBIProvider.getDBI().useTransaction((conn, status) -> dao.insertBatch(users.iterator(), batchSize));
+        DBIProvider.getDBI().useTransaction((conn, status) -> dao.insertBatchGeneratedId(users.iterator(), batchSize));
     }
 }
