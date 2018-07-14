@@ -6,8 +6,10 @@ import org.skife.jdbi.v2.sqlobject.customizers.BatchChunkSize;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.model.User;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 
@@ -24,15 +26,20 @@ public abstract class UserDao implements AbstractDao {
         return user;
     }
 
+    public void batchInsert(Iterator<User> users, int size) {
+        int[] ids = insertBatchGeneratedId(users, size);
+        System.out.printf("%d entries inserted into masterjava-db%n", IntStream.of(ids).sum());
+    }
+
     @SqlUpdate("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
     @GetGeneratedKeys
     abstract int insertGeneratedId(@BindBean User user);
 
     @SqlBatch("INSERT INTO users (full_name, email, flag) " +
-              "VALUES (:fullName, :email, " +
-              "CAST(:flag AS user_flag)) " +
-              "ON CONFLICT ON CONSTRAINT email_idx DO NOTHING ")
-    public abstract void insertBatchGeneratedId(@BindBean Iterator<User> user, @BatchChunkSize int size);
+            "VALUES (:fullName, :email, " +
+            "CAST(:flag AS user_flag)) " +
+            "ON CONFLICT ON CONSTRAINT email_idx DO NOTHING ")
+    abstract int[] insertBatchGeneratedId(@BindBean Iterator<User> user, @BatchChunkSize int size);
 
     @SqlUpdate("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS user_flag)) ")
     abstract void insertWithId(@BindBean User user);
