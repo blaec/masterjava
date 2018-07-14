@@ -30,7 +30,7 @@ public class AddToDB {
             return DriverManager.getConnection("jdbc:postgresql://localhost:5432/masterjava", "postgres", "postgres");
         });
         UserDao dao = DBIProvider.getDao(UserDao.class);
-        dao.clean();
+//        dao.clean();
         int batchSize = 3;
         DBIProvider.getDBI().useTransaction((conn, status) -> dao.insertBatch(users.iterator(), batchSize));
     }
