@@ -9,6 +9,8 @@ import ru.javaops.masterjava.persist.dao.AbstractDao;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import java.sql.DriverManager;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBIProvider {
