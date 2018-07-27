@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS user_groups;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS cities;
@@ -28,11 +29,17 @@ CREATE TABLE users (
   email       TEXT NOT NULL,
   flag        user_flag NOT NULL,
   city_id     INTEGER NOT NULL,
-  group_id    INTEGER NOT NULL,
-  FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE,
-  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
+  FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX email_idx ON users (email);
+
+CREATE TABLE user_groups (
+  user_id     INTEGER NOT NULL,
+  group_id    INTEGER NOT NULL,
+  CONSTRAINT user_group_idx UNIQUE (user_id, group_id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
+);
 
 CREATE TABLE projects (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),

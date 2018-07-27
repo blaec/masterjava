@@ -19,7 +19,7 @@ public abstract class CityDao implements AbstractDao {
         return city;
     }
 
-    @SqlUpdate("TRUNCATE users, cities")
+    @SqlUpdate("TRUNCATE user_groups, users, cities")
     @Override
     public void clean() {
     }
