@@ -3,7 +3,6 @@ package ru.javaops.masterjava.persist.dao;
 import com.bertoncelj.jdbi.entitymapper.EntityMapperFactory;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
-import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.Group;
 
 import java.util.List;
@@ -35,4 +34,6 @@ public abstract class GroupDao implements AbstractDao {
     @SqlQuery("SELECT * FROM groups LIMIT :it")
     public abstract List<Group> getWithLimit(@Bind int limit);
 
+    @SqlQuery("SELECT * FROM groups WHERE id=:id")
+    public abstract Group getById(@Bind("id") int id);
 }

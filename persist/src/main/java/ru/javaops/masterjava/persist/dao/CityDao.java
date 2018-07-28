@@ -34,4 +34,6 @@ public abstract class CityDao implements AbstractDao {
     @SqlQuery("SELECT * FROM cities LIMIT :it")
     public abstract List<City> getWithLimit(@Bind int limit);
 
+    @SqlQuery("SELECT * FROM cities WHERE id=:id")
+    public abstract City getById(@Bind("id") int id);
 }

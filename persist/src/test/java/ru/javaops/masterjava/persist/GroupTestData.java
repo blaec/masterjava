@@ -2,39 +2,36 @@ package ru.javaops.masterjava.persist;
 
 import com.google.common.collect.ImmutableList;
 import ru.javaops.masterjava.persist.dao.GroupDao;
-import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.GroupType;
-import ru.javaops.masterjava.persist.model.User;
-import ru.javaops.masterjava.persist.model.UserFlag;
 
 import java.util.List;
 
 public class GroupTestData {
-    public static Group masterjava01;
-    public static Group masterjava02;
-    public static Group topjava01;
-    public static Group topjava02;
-    public static Group topjava03;
-    public static Group topjava04;
-    public static Group topjava05;
-    public static Group topjava06;
-    public static Group topjava07;
-    public static Group topjava08;
+    public static Group MASTERJAVA01;
+    public static Group MASTERJAVA02;
+    public static Group TOPJAVA01;
+    public static Group TOPJAVA02;
+    public static Group TOPJAVA03;
+    public static Group TOPJAVA04;
+    public static Group TOPJAVA05;
+    public static Group TOPJAVA06;
+    public static Group TOPJAVA07;
+    public static Group TOPJAVA08;
     public static List<Group> FIRST5_GROUPS;
 
     public static void init() {
-        masterjava01 = new Group("masterjava01", GroupType.CURRENT);
-        masterjava02 = new Group("masterjava02", GroupType.REGISTERING);
-        topjava01 = new Group("topjava01", GroupType.FINISHED);
-        topjava02 = new Group("topjava02", GroupType.FINISHED);
-        topjava03 = new Group("topjava03", GroupType.FINISHED);
-        topjava04 = new Group("topjava04", GroupType.FINISHED);
-        topjava05 = new Group("topjava05", GroupType.FINISHED);
-        topjava06 = new Group("topjava06", GroupType.FINISHED);
-        topjava07 = new Group("topjava07", GroupType.FINISHED);
-        topjava08 = new Group("topjava08", GroupType.CURRENT);
-        FIRST5_GROUPS = ImmutableList.of(masterjava01, masterjava02, topjava01, topjava02, topjava03);
+        MASTERJAVA01 = new Group("masterjava01", GroupType.CURRENT);
+        MASTERJAVA02 = new Group("masterjava02", GroupType.REGISTERING);
+        TOPJAVA01 = new Group("topjava01", GroupType.FINISHED);
+        TOPJAVA02 = new Group("topjava02", GroupType.FINISHED);
+        TOPJAVA03 = new Group("topjava03", GroupType.FINISHED);
+        TOPJAVA04 = new Group("topjava04", GroupType.FINISHED);
+        TOPJAVA05 = new Group("topjava05", GroupType.FINISHED);
+        TOPJAVA06 = new Group("topjava06", GroupType.FINISHED);
+        TOPJAVA07 = new Group("topjava07", GroupType.FINISHED);
+        TOPJAVA08 = new Group("topjava08", GroupType.CURRENT);
+        FIRST5_GROUPS = ImmutableList.of(MASTERJAVA01, MASTERJAVA02, TOPJAVA01, TOPJAVA02, TOPJAVA03);
     }
 
     public static void setUp() {
@@ -42,11 +39,11 @@ public class GroupTestData {
         dao.clean();
         DBIProvider.getDBI().useTransaction((conn, status) -> {
             FIRST5_GROUPS.forEach(dao::insert);
-            dao.insert(topjava04);
-            dao.insert(topjava05);
-            dao.insert(topjava06);
-            dao.insert(topjava07);
-            dao.insert(topjava08);
+            dao.insert(TOPJAVA04);
+            dao.insert(TOPJAVA05);
+            dao.insert(TOPJAVA06);
+            dao.insert(TOPJAVA07);
+            dao.insert(TOPJAVA08);
         });
     }
 }
