@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.javaops.masterjava.persist.UserTestData.FIST5_USERS;
 
@@ -82,12 +83,10 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
     @Test
     public void insertBatch() throws Exception {
         dao.clean();
-/*
         List<Integer> cityIds = FIST5_USERS.stream()
                 .map(u -> u.getCity().getId())
                 .collect(Collectors.toList());
-*/
-        dao.insertBatch(FIST5_USERS, 3);
+        dao.insertBatch(FIST5_USERS, 3, cityIds);
         Assert.assertEquals(5, dao.getWithLimit(100).size());
     }
 
