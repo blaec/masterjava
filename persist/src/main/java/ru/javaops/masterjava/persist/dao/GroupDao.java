@@ -19,7 +19,7 @@ public abstract class GroupDao implements AbstractDao {
         return group;
     }
 
-    @SqlUpdate("TRUNCATE user_groups, users, projects, groups")
+    @SqlUpdate("TRUNCATE user_groups, project_groups, groups")
     @Override
     public void clean() {
     }

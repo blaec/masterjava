@@ -23,9 +23,8 @@ public class User extends BaseEntity {
         this.id=id;
     }
 
-//    @ConstructorProperties({"id", "full_name", "email", "flag", "city_id"})
     public User(Integer id, String fullName, String email, UserFlag flag, int cityId) {
-        this(fullName, email, flag, new City(), new ArrayList<Group>());
+        this(fullName, email, flag, new City(), new ArrayList<>());
         this.city.setId(cityId);
         this.id=id;
     }

@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS project_groups;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS user_groups;
 DROP TABLE IF EXISTS users;
@@ -44,7 +45,13 @@ CREATE TABLE user_groups (
 CREATE TABLE projects (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
   name        TEXT NOT NULL,
-  desciption  TEXT NOT NULL,
+  description TEXT NOT NULL
+);
+
+CREATE TABLE project_groups (
+  project_id     INTEGER NOT NULL,
   group_id    INTEGER NOT NULL,
-  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
+  CONSTRAINT project_group_idx UNIQUE (project_id, group_id),
+  FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
 );
