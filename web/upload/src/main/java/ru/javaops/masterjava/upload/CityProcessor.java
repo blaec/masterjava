@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import ru.javaops.masterjava.persist.DBIProvider;
+import ru.javaops.masterjava.persist.dao.CityDao;
 import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.City;
-import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.UserFlag;
 import ru.javaops.masterjava.xml.schema.ObjectFactory;
@@ -25,57 +25,48 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 @Slf4j
-public class UserProcessor {
+public class CityProcessor {
     private static final int NUMBER_THREADS = 4;
 
     private static final JaxbParser jaxbParser = new JaxbParser(ObjectFactory.class);
-    private static UserDao userDao = DBIProvider.getDao(UserDao.class);
+    private static CityDao cityDao = DBIProvider.getDao(CityDao.class);
 
     private ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
 
     @AllArgsConstructor
-    public static class FailedEmails {
-        public String emailsOrRange;
+    public static class FailedCities {
+        public String citiesOrRange;
         public String reason;
 
         @Override
         public String toString() {
-            return emailsOrRange + " : " + reason;
+            return citiesOrRange + " : " + reason;
         }
     }
 
     /*
      * return failed users chunks
      */
-    public List<FailedEmails> process(final InputStream is, int chunkSize) throws XMLStreamException, JAXBException {
+    public List<FailedCities> process(final InputStream is, int chunkSize) throws XMLStreamException, JAXBException {
         log.info("Start processing with chunkSize=" + chunkSize);
 
         Map<String, Future<List<String>>> chunkFutures = new LinkedHashMap<>();  // ordered map (emailRange -> chunk future)
 
-        int id = userDao.getSeqAndSkip(chunkSize);
-        List<User> chunk = new ArrayList<>(chunkSize);
+        int id = cityDao.getSeqAndSkip(chunkSize);
+        List<City> chunk = new ArrayList<>(chunkSize);
         val processor = new StaxStreamProcessor(is);
         val unmarshaller = jaxbParser.createUnmarshaller();
 
-        while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
-            ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
-/*
-            City city = (City) xmlUser.getCity();
-//            List<Group> groups = (List<Group>)(Object)xmlUser.getGroupRefs();
-            List<Group> groups = xmlUser.getGroupRefs().stream()
-                    .filter(e -> e instanceof Group)
-                    .map(g -> (Group) g)
-                    .collect(Collectors.toList());
-*/
-            final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()), new City(), new ArrayList<>());
-            chunk.add(user);
+        while (processor.doUntil(XMLEvent.START_ELEMENT, "City")) {
+            ru.javaops.masterjava.xml.schema.CityType xmlCity = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.CityType.class);
+            final City city = new City(id++, xmlCity.getValue());
+            chunk.add(city);
             if (chunk.size() == chunkSize) {
                 addChunkFutures(chunkFutures, chunk);
                 chunk = new ArrayList<>(chunkSize);
-                id = userDao.getSeqAndSkip(chunkSize);
+                id = cityDao.getSeqAndSkip(chunkSize);
             }
         }
 
@@ -83,7 +74,7 @@ public class UserProcessor {
             addChunkFutures(chunkFutures, chunk);
         }
 
-        List<FailedEmails> failed = new ArrayList<>();
+        List<FailedCities> failed = new ArrayList<>();
         List<String> allAlreadyPresents = new ArrayList<>();
         chunkFutures.forEach((emailRange, future) -> {
             try {
@@ -92,19 +83,19 @@ public class UserProcessor {
                 allAlreadyPresents.addAll(alreadyPresentsInChunk);
             } catch (InterruptedException | ExecutionException e) {
                 log.error(emailRange + " failed", e);
-                failed.add(new FailedEmails(emailRange, e.toString()));
+                failed.add(new FailedCities(emailRange, e.toString()));
             }
         });
         if (!allAlreadyPresents.isEmpty()) {
-            failed.add(new FailedEmails(allAlreadyPresents.toString(), "already presents"));
+            failed.add(new FailedCities(allAlreadyPresents.toString(), "already presents"));
         }
         return failed;
     }
 
-    private void addChunkFutures(Map<String, Future<List<String>>> chunkFutures, List<User> chunk) {
-        String emailRange = String.format("[%s-%s]", chunk.get(0).getEmail(), chunk.get(chunk.size() - 1).getEmail());
-        Future<List<String>> future = executorService.submit(() -> userDao.insertAndGetConflictEmails(chunk));
-        chunkFutures.put(emailRange, future);
-        log.info("Submit chunk: " + emailRange);
+    private void addChunkFutures(Map<String, Future<List<String>>> chunkFutures, List<City> chunk) {
+        String cityRange = String.format("[%s-%s]", chunk.get(0).getName(), chunk.get(chunk.size() - 1).getName());
+        Future<List<String>> future = executorService.submit(() -> cityDao.insertAndGetConflictCities(chunk));
+        chunkFutures.put(cityRange, future);
+        log.info("Submit chunk: " + cityRange);
     }
 }
