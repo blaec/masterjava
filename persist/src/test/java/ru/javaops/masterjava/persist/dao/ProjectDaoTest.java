@@ -4,18 +4,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.GroupTestData;
 import ru.javaops.masterjava.persist.ProjectTestData;
-import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.Project;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static ru.javaops.masterjava.persist.ProjectTestData.MASTERJAVA;
+import static ru.javaops.masterjava.persist.dao.TestUtils.getGroups;
 
 public class ProjectDaoTest extends AbstractDaoTest<ProjectDao> {
 
@@ -43,25 +40,12 @@ public class ProjectDaoTest extends AbstractDaoTest<ProjectDao> {
 //        expected.add(TOPJAVA);
         List<Project> projects = dao.getWithLimit(expected.size());
 
-        GroupDao groupDao = DBIProvider.getDao(GroupDao.class);
-        Map<Integer, Group> groupMap = new HashMap<>();
-
         for (Project project : projects) {
             List<Integer> groupIds = dao.getProjectGroups(project.getId());
-            List<Group> groups = new ArrayList<>();
-            for (int groupId : groupIds) {
-                Group group;
-                if (groupMap.containsKey(groupId)) {
-                    group = groupMap.get(groupId);
-                } else {
-                    group = groupDao.getById(groupId);
-                    groupMap.put(groupId, group);
-                }
-                groups.add(group);
-            }
-            project.setGroups(groups);
+            project.setGroups(getGroups(groupIds));
         }
 
         Assert.assertEquals(expected, projects);
     }
+
 }

@@ -4,14 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.javaops.masterjava.persist.CityTestData;
 import ru.javaops.masterjava.persist.GroupTestData;
-import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.Group;
 
 import java.util.List;
 
-import static ru.javaops.masterjava.persist.CityTestData.FIRST3_CITIES;
 import static ru.javaops.masterjava.persist.GroupTestData.FIRST5_GROUPS;
 
 public class GroupDaoTest extends AbstractDaoTest<GroupDao> {

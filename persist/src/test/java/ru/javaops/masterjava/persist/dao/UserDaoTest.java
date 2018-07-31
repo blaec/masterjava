@@ -9,16 +9,15 @@ import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.GroupTestData;
 import ru.javaops.masterjava.persist.UserTestData;
 import ru.javaops.masterjava.persist.model.City;
-import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.javaops.masterjava.persist.UserTestData.FIST5_USERS;
+import static ru.javaops.masterjava.persist.dao.TestUtils.getGroups;
 
 public class UserDaoTest extends AbstractDaoTest<UserDao> {
 
@@ -47,34 +46,22 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
         List<User> users = dao.getWithLimit(5);
 
         CityDao cityDao = DBIProvider.getDao(CityDao.class);
-        GroupDao groupDao = DBIProvider.getDao(GroupDao.class);
+
         Map<Integer, City> cityMap = new HashMap<>();
-        Map<Integer, Group> groupMap = new HashMap<>();
 
         for (User user : users) {
             int cityId = user.getCity().getId();
             City city;
             if (cityMap.containsKey(cityId)) {
                 city = cityMap.get(cityId);
-            }  else {
+            } else {
                 city = cityDao.getById(cityId);
                 cityMap.put(cityId, city);
             }
             user.setCity(city);
 
             List<Integer> groupIds = dao.getUserGroups(user.getId());
-            List<Group> groups = new ArrayList<>();
-            for (int groupId : groupIds) {
-                Group group;
-                if (groupMap.containsKey(groupId)) {
-                    group = groupMap.get(groupId);
-                } else {
-                    group = groupDao.getById(groupId);
-                    groupMap.put(groupId, group);
-                }
-                groups.add(group);
-            }
-            user.setGroups(groups);
+            user.setGroups(getGroups(groupIds));
         }
 
         Assert.assertEquals(FIST5_USERS, users);

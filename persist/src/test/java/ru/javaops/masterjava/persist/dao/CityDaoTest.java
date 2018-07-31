@@ -32,4 +32,11 @@ public class CityDaoTest extends AbstractDaoTest<CityDao> {
         List<City> cities = dao.getWithLimit(3);
         Assert.assertEquals(FIRST3_CITIES, cities);
     }
+
+    @Test
+    public void getSeqAndSkip() throws Exception {
+        int seq1 = dao.getSeqAndSkip(2);
+        int seq2 = dao.getSeqAndSkip(1);
+        Assert.assertEquals(2, seq2 - seq1);
+    }
 }
