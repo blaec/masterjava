@@ -17,6 +17,7 @@ CREATE TABLE cities (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
   name        TEXT NOT NULL
 );
+CREATE UNIQUE INDEX city_name ON cities (name);
 
 CREATE TABLE groups (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),

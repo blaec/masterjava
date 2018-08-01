@@ -54,12 +54,10 @@ public class UploadServlet extends HttpServlet {
                     }
                 } else if (req.getParameter("city") != null) {
                     try (InputStream is = filePart.getInputStream()) {
-                        List<CityProcessor.FailedCities> failed = cityProcessor.process(is, chunkSize);
-                        log.info("Failed cities: " + failed);
+                        cityProcessor.process(is);
                         final WebContext webContext =
-                                new WebContext(req, resp, req.getServletContext(), req.getLocale(),
-                                        ImmutableMap.of("cities", failed));
-                        engine.process("result", webContext, resp.getWriter());
+                                new WebContext(req, resp, req.getServletContext(), req.getLocale());
+                        engine.process("city", webContext, resp.getWriter());
                         return;
                     }
                 }
