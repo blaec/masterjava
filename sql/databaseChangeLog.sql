@@ -32,3 +32,16 @@ CREATE TABLE user_group (
   group_id INTEGER NOT NULL REFERENCES groups (id),
   CONSTRAINT users_group_idx UNIQUE (user_id, group_id)
 );
+
+--changeset Konstantin:3
+CREATE TABLE mails (
+  id          INTEGER PRIMARY KEY DEFAULT nextval('common_seq'),
+  has_attachment  BOOLEAN UNIQUE NOT NULL,
+  from_mail       TEXT UNIQUE NOT NULL,
+  from_name       TEXT UNIQUE NOT NULL,
+  subject         TEXT UNIQUE NOT NULL,
+  body            TEXT UNIQUE NOT NULL,
+  to_list         TEXT UNIQUE NOT NULL,
+  cc_list         TEXT UNIQUE NOT NULL
+);
+--rollback drop table mails;
