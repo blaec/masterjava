@@ -35,13 +35,13 @@ CREATE TABLE user_group (
 
 --changeset Konstantin:3
 CREATE TABLE mails (
-  id          INTEGER PRIMARY KEY DEFAULT nextval('common_seq'),
-  has_attachment  BOOLEAN UNIQUE NOT NULL,
-  from_mail       TEXT UNIQUE NOT NULL,
-  from_name       TEXT UNIQUE NOT NULL,
-  subject         TEXT UNIQUE NOT NULL,
-  body            TEXT UNIQUE NOT NULL,
-  to_list         TEXT UNIQUE NOT NULL,
-  cc_list         TEXT UNIQUE NOT NULL
+  id              INTEGER PRIMARY KEY DEFAULT nextval('common_seq'),
+  has_attachment  BOOLEAN   NOT NULL,
+  from_mail       TEXT      NOT NULL,
+  from_name       TEXT      NOT NULL,
+  subject         TEXT      NOT NULL,
+  body            TEXT      NOT NULL,
+  to_list         TEXT      NOT NULL,
+  cc_list         TEXT      NOT NULL
 );
 --rollback drop table mails;
