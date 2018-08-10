@@ -1,14 +1,16 @@
-package ru.javaops.masterjava.dao;
+package ru.javaops.masterjava.service.dao;
 
 import com.bertoncelj.jdbi.entitymapper.EntityMapperFactory;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
-import ru.javaops.masterjava.model.SentMail;
+import ru.javaops.masterjava.persist.dao.AbstractDao;
+import ru.javaops.masterjava.service.model.SentMail;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
-public abstract class SentMailDao {
+public abstract class SentMailDao implements AbstractDao {
     public SentMail insert(SentMail sentMail) {
         if (sentMail.isNew()) {
             int id = insertGeneratedId(sentMail);
@@ -28,6 +30,11 @@ public abstract class SentMailDao {
                "VALUES (:id, :hasAttachment, :fromMail, :fromName, :subject, :body, :toList, :ccList) ")
     abstract void insertWithId(@BindBean SentMail sentMail);
 
+    @SqlQuery("SELECT * FROM mails LIMIT 1")
+    public abstract SentMail getFirst();
+
+
     @SqlUpdate("TRUNCATE mails")
+    @Override
     public abstract void clean();
 }

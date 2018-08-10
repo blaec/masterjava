@@ -1,4 +1,4 @@
-package ru.javaops.masterjava.model;
+package ru.javaops.masterjava.service.model;
 
 import com.bertoncelj.jdbi.entitymapper.Column;
 import lombok.*;
