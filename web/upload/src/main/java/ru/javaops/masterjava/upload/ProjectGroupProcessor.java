@@ -29,23 +29,27 @@ public class ProjectGroupProcessor {
         val groupMap = groupDao.getAsMap();
         val newProjects = new ArrayList<Project>();
         val newGroups = new HashMap<String, Group>();
+        val PROJECT = "Project";
 
-        while (processor.startElement("Project", "Projects")) {
+        while (processor.startElement(PROJECT, "Projects")) {
             val ref = processor.getAttribute("name");
 
             XMLStreamReader reader = processor.getReader();
             while (reader.hasNext()) {
                 int event = reader.next();
-                if (event == XMLEvent.END_ELEMENT && "Project".equals((event == XMLEvent.CHARACTERS) ? reader.getText() : reader.getLocalName())) {
+                if (event == XMLEvent.END_ELEMENT && isLocalName(PROJECT, reader)) {
                     break;
                 }
                 if (event == XMLEvent.START_ELEMENT) {
-                    if ("Group".equals(reader.getLocalName())) {
+                    if (isLocalName("Group", reader)) {
                         String name = processor.getAttribute("name");
-                        String type = processor.getAttribute("type");
-                        String rndSuffix = String.format("-%03d",((new Random()).nextInt(1000)));
-                        newGroups.put(ref + rndSuffix, new Group(name, GroupType.valueOf(type), 1));
-                    } else {
+                        if (!groupMap.containsKey(name)) {
+                            String type = processor.getAttribute("type");
+                            String rndSuffix = String.format("-%03d", ((new Random()).nextInt(1000)));
+                            newGroups.put(ref + rndSuffix, new Group(name, GroupType.valueOf(type), 1));
+                        }
+
+                    } else if (isLocalName("description", reader)) {
                         if (!projectMap.containsKey(ref)) {
                             newProjects.add(new Project(ref, processor.getText()));
                         }
@@ -63,12 +67,14 @@ public class ProjectGroupProcessor {
         log.info("Insert new group(s) " + newGroups);
         for (String key : newGroups.keySet()) {
             Group group = newGroups.get(key);
-            if (!groupMap.containsKey(group.getName())) {
-                String project = key.split("-")[0];
-                Integer id = projectMap.get(project).getId();
-                group.setProjectId(id);
-                groupDao.insert(group);
-            }
+            String project = key.split("-")[0];
+            Integer id = projectMap.get(project).getId();
+            group.setProjectId(id);
+            groupDao.insert(group);
         }
+    }
+
+    private boolean isLocalName(String element, XMLStreamReader reader) {
+        return element.equals(reader.getLocalName());
     }
 }
