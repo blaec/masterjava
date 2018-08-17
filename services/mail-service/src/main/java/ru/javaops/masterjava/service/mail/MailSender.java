@@ -1,16 +1,11 @@
 package ru.javaops.masterjava.service.mail;
 
-import com.typesafe.config.Config;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.mail.*;
-import ru.javaops.masterjava.config.Configs;
-import ru.javaops.masterjava.service.dao.SentMailDao;
-import ru.javaops.masterjava.service.model.SentMail;
-import ru.javaops.masterjava.persist.DBIProvider;
+import lombok.val;
+import org.apache.commons.mail.EmailException;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,52 +13,37 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MailSender {
     static void sendMail(List<Addressee> to, List<Addressee> cc, String subject, String body) throws EmailException, MalformedURLException {
-        Config mail = Configs.getConfig("mail.conf", "mail");
-        MultiPartEmail  email = new MultiPartEmail ();
 
-        // Create and add the attachment
-        EmailAttachment attachment = new EmailAttachment();
-        attachment.setPath(mail.getString("attachment"));
-        attachment.setDisposition(EmailAttachment.ATTACHMENT);
-        attachment.setDescription("Picture of " + mail.getString("fromName"));
-        attachment.setName(mail.getString("fromName"));
-        email.attach(attachment);
+        try {
+            val email = MailConfig.createHtmlEmail();
+            email.setSubject(subject);
+            email.setHtmlMsg(body);
+            for (Addressee addressee : to) {
+                email.addTo(addressee.getEmail(), addressee.getName());
+            }
+            for (Addressee addressee : cc) {
+                email.addCc(addressee.getEmail(), addressee.getName());
+            }
+            email.attach(MailConfig.attachFile(false));
+            email.attach(MailConfig.attachFile(true));
+            email.setHeaders(ImmutableMap.of("List-Unsubscribe", "<mailto:odeskonst@yandex.ru?subject=Unscubscribe&body=Unsubscribe>"));
 
-        // Create and add the attachment with reference any valid URL
-        EmailAttachment attachmentUrl = new EmailAttachment();
-        attachmentUrl.setURL(new URL("http://www.apache.org/images/asf_logo_wide.gif"));
-        attachmentUrl.setDisposition(EmailAttachment.ATTACHMENT);
-        attachmentUrl.setDescription("Apache logo");
-        attachmentUrl.setName("Apache logo");
-        email.attach(attachmentUrl);
+            email.send();
+        } catch (EmailException e) {
+            log.error(e.getMessage(), e);
+        }
 
         // Create the email message
         String[] sendTo = mailList(to);
         String[] sendCc = mailList(cc);
-        String from = "odeskonst@yandex.ru";
-
-        email.setHostName(mail.getString("host"));
-        email.setSmtpPort(mail.getInt("port"));
-        email.setAuthenticator(new DefaultAuthenticator(mail.getString("username"), mail.getString("password")));
-        email.setSSLOnConnect(mail.getBoolean("useSSL"));
-        email.setTLS(mail.getBoolean("useTLS"));
-        email.setFrom("odeskonst@yandex.ru", mail.getString("fromName"));
-        email.setSubject(subject);
-        email.setMsg(body);
-        email.addTo(sendTo);
-        email.setDebug(mail.getBoolean("debug"));
-        if (sendCc.length != 0) {
-            email.addCc(sendCc);
-        }
-
-        // send the email
-        email.send();
+//        String from = "odeskonst@yandex.ru";
 
         log.info("Send mail to \'" + Arrays.toString(sendTo) + "\' " +
                 "cc \'" + Arrays.toString(sendCc) + "\' " +
                 "subject \'" + subject +
                 (log.isDebugEnabled() ? "\nbody=" + body : ""));
 
+/*
         // Save results to db
         SentMail sentMail = new SentMail(
                 email.isBoolHasAttachments(), from, mail.getString("fromName"), subject, body,
@@ -81,6 +61,7 @@ public class MailSender {
 
         SentMailDao dao = DBIProvider.getDao(SentMailDao.class);
         dao.insert(sentMail);
+*/
     }
 
     private static String[] mailList(List<Addressee> input) {
