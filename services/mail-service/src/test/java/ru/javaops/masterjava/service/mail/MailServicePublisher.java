@@ -1,6 +1,7 @@
 package ru.javaops.masterjava.service.mail;
 
 import com.google.common.collect.ImmutableList;
+import ru.javaops.masterjava.config.Configs;
 import ru.javaops.masterjava.persist.DBITestProvider;
 
 import javax.xml.transform.Source;
@@ -9,6 +10,8 @@ import javax.xml.ws.Endpoint;
 import java.io.File;
 import java.util.List;
 
+import static ru.javaops.masterjava.config.Configs.getConfig;
+
 public class MailServicePublisher {
 
     public static void main(String[] args) {
@@ -16,8 +19,7 @@ public class MailServicePublisher {
 
         Endpoint endpoint = Endpoint.create(new MailServiceImpl());
         List<Source> metadata = ImmutableList.of(
-                new StreamSource(
-                        new File("services/mail-service/src/main/webapp/WEB-INF/wsdl/mailService.wsdl")));
+                new StreamSource(Configs.getConfigFile("wsdl/mailService.wsdl")));
 
         endpoint.setMetadata(metadata);
         endpoint.publish("http://localhost:8080/mail/mailService");
