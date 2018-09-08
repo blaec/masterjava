@@ -41,7 +41,8 @@ public class MailWSClient {
     }
 
     private static MailService getPort() {
-        return WS_CLIENT.getPort(new MTOMFeature(1024));
+//        return WS_CLIENT.getPort(new MTOMFeature(1024));
+        return WS_CLIENT.getPort();
     }
 
     public static Set<Addressee> split(String addressees) {
