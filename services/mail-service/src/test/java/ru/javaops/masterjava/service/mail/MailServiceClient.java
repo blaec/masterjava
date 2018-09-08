@@ -20,7 +20,7 @@ public class MailServiceClient {
                 new QName("http://mail.javaops.ru/", "MailServiceImplService"));
 
         List<Attachment> attachments = ImmutableList.of(
-                new Attachment(new DataHandler(new File("config_templates/version.html").toURI().toURL())));
+                new Attachment("FileName", new DataHandler(new File("config_templates/version.html").toURI().toURL())));
 
         MailService mailService = service.getPort(MailService.class);
 

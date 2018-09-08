@@ -15,7 +15,7 @@ import java.util.List;
 public class MailWSClientMain {
     public static void main(String[] args) throws WebStateException, MalformedURLException {
         List<Attachment> attachments = ImmutableList.of(
-                new Attachment(new DataHandler(new File("config_templates/version.html").toURI().toURL())));
+                new Attachment("FileName", new DataHandler(new File("config_templates/version.html").toURI().toURL())));
 
         String state = MailWSClient.sendToGroup(
                 ImmutableSet.of(new Addressee("To <blaec@yandex.ru>")),

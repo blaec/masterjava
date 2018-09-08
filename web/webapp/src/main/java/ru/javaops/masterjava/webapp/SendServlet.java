@@ -43,7 +43,7 @@ public class SendServlet extends HttpServlet {
                 } else {
                     if (!Strings.isNullOrEmpty(item.getName())) {
 //                            attaches = ImmutableList.of(Attachments.getAttach(item.getName(), item.openStream()));
-                        attaches = ImmutableList.of(Attachments.getAttach(item.openStream()));
+                        attaches = ImmutableList.of(Attachments.getAttach(item.getFieldName(), item.openStream()));
                     }
                     break;
                 }

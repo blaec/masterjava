@@ -16,8 +16,8 @@ public class Attachments {
         return new Attachment(name, new DataHandler(new InputStreamDataSource(inputStream)));
     }
 */
-    public static Attachment getAttach(InputStream inputStream) {
-        return new Attachment(new DataHandler(new InputStreamDataSource(inputStream)));
+    public static Attachment getAttach(String name, InputStream inputStream) {
+        return new Attachment(name, new DataHandler(new InputStreamDataSource(inputStream)));
     }
 
     @AllArgsConstructor

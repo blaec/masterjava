@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlMimeType;
 @NoArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Attachment {
-//    protected String name;
+    protected String name;
 
     @XmlMimeType("application/octet-stream")
     DataHandler dataHandler;
