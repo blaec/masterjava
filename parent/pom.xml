@@ -61,6 +61,23 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+            </plugin>
         </plugins>
 
         <testResources>
@@ -75,6 +92,13 @@
             </testResource>
         </testResources>
     </build>
+
+    <scm>
+        <connection>scm:git:https://github.com/blaec/masterjava.git</connection>
+        <developerConnection>scm:git:https://github.com/blaec/masterjava.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/blaec/masterjava.git</url>
+    </scm>
 
     <dependencies>
         <dependency>
