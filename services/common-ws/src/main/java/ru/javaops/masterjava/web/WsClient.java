@@ -22,7 +22,7 @@ public class WsClient<T> {
     private String endpointAddress;
 
     static {
-        HOSTS = Configs.getConfig("hosts.conf", "hosts");
+        HOSTS = Configs.getConfig("hosts.conf", "hosts.mail");
     }
 
     public WsClient(URL wsdlUrl, QName qname, Class<T> serviceClass) {
@@ -32,6 +32,10 @@ public class WsClient<T> {
 
     public void init(String host, String endpointAddress) {
         this.endpointAddress = HOSTS.getString(host) + endpointAddress;
+    }
+
+    public static String getConfSettings(String name) {
+        return HOSTS.getString(name);
     }
 
     //  Post is not thread-safe (http://stackoverflow.com/a/10601916/548473)
