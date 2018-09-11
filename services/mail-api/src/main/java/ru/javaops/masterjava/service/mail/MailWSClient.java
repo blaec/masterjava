@@ -10,6 +10,7 @@ import ru.javaops.masterjava.web.AuthUtil;
 import ru.javaops.masterjava.web.WebStateException;
 import ru.javaops.masterjava.web.WsClient;
 import ru.javaops.masterjava.web.handler.SoapLoggingHandlers;
+import ru.javaops.masterjava.web.handler.SoapServerSecurityHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.MTOMFeature;
@@ -22,6 +23,7 @@ public class MailWSClient {
     public static final String USER = WsClient.getConfSettings("user");
     public static final String PASSWORD = WsClient.getConfSettings("password");
     private static final SoapLoggingHandlers.ClientHandler LOGGING_HANDLER = new SoapLoggingHandlers.ClientHandler(Level.valueOf(WsClient.getConfSettings("debug.client")));
+    private static final SoapServerSecurityHandler SIGNING_HANDLER = new SoapServerSecurityHandler();
 
     public static String AUTH_HEADER = AuthUtil.encodeBasicAuthHeader(USER, PASSWORD);
 
@@ -52,6 +54,7 @@ public class MailWSClient {
         MailService port = WS_CLIENT.getPort(new MTOMFeature(1024));
         WsClient.setAuth(port, USER, PASSWORD);
         WsClient.setHandler(port, LOGGING_HANDLER);
+        WsClient.setHandler(port, SIGNING_HANDLER);
         return port;
     }
 
