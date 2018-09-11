@@ -53,10 +53,12 @@ public class WsClient<T> {
         requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
     }
 
-    public static <T> void setHandler(T port, Handler handler) {
+    public static <T> void setHandler(T port, Handler... handlers) {
         Binding binding = ((BindingProvider) port).getBinding();
         List<Handler> handlerList = binding.getHandlerChain();
-        handlerList.add(handler);
+        for (Handler handler : handlers) {
+            handlerList.add(handler);
+        }
         binding.setHandlerChain(handlerList);
     }
 

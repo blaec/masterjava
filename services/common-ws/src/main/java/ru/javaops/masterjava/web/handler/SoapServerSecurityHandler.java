@@ -30,5 +30,6 @@ public class SoapServerSecurityHandler extends SoapBaseHandler {
             mCtx.put(MessageContext.HTTP_RESPONSE_CODE, code);
             throw new SecurityException();
         }
+        log.info("Login is correct.");
     }
 }
