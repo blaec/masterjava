@@ -11,6 +11,7 @@ import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.handler.Handler;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -56,9 +57,7 @@ public class WsClient<T> {
     public static <T> void setHandler(T port, Handler... handlers) {
         Binding binding = ((BindingProvider) port).getBinding();
         List<Handler> handlerList = binding.getHandlerChain();
-        for (Handler handler : handlers) {
-            handlerList.add(handler);
-        }
+        handlerList.addAll(Arrays.asList(handlers));
         binding.setHandlerChain(handlerList);
     }
 
